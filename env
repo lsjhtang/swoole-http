@@ -1,0 +1,4 @@
+url=127.0.0.1:80
+scan_dir=./app/controllers
+scan_root_namespace=App\
+version = 1.1
