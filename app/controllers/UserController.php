@@ -2,6 +2,7 @@
 namespace App\controller;
 
 use Core\annotations\Bean;
+use Core\annotations\RequestMapping;
 use Core\annotations\Value;
 
 /**
@@ -13,4 +14,12 @@ class UserController{
      * @Value(name="version")
      */
     public $version = '1.0';
+
+    /**
+     * @RequestMapping(value="/test",method={})
+     */
+    public function test()
+    {
+        return 'test';
+    }
 }
