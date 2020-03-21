@@ -22,7 +22,16 @@ class BeanFactory{
         }
         $loader = require __DIR__.'/../vendor/autoload.php';
         AnnotationRegistry::registerLoader([$loader,'loadClass']);//设置注解加载
-        self::ScanBeans();//扫描指定文件夹下所有文件
+
+        $scans = [
+            ROOT_PATH.'/core/init'=>"Core\\",
+            self::getEnv('scan_dir',ROOT_PATH.'/app')=>self::getEnv('scan_root_namespace','App\\'),
+        ];
+        foreach ($scans as $scan_dir=>$scan_root_namespace) {
+
+            self::ScanBeans($scan_dir, $scan_root_namespace);//扫描指定文件夹下所有文件
+        }
+
     }
 
     public static function getEnv(string $key, string $default='')//读取配置文件内容
@@ -36,10 +45,8 @@ class BeanFactory{
         return self::$container->get($name);
     }
 
-    public static function ScanBeans()
+    public static function ScanBeans($scan_dir, $scan_root_namespace)
     {
-        $scan_dir = self::getEnv('scan_dir',ROOT_PATH.'/app');
-        $scan_root_namespace = self::getEnv('scan_root_namespace','App\\');
         $files = glob($scan_dir.'/*.php');//读取文件夹下面所有.php文件
         foreach ($files as $file) {
             require_once ($file);
