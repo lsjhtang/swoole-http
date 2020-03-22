@@ -2,6 +2,8 @@
 namespace Core\init;
 
 use Core\annotations\Bean;
+use FastRoute\RouteCollector;
+use function FastRoute\simpleDispatcher;
 
 /**
  * 路由收集器
@@ -19,5 +21,15 @@ class RouterCollector {
             'uri'       => $uri,
             'handler'   => $handler,
         ];
+    }
+
+
+    public function getDispatcher()
+    {
+        return simpleDispatcher(function (RouteCollector $r){
+            foreach ($this->routes as $route) {
+                $r->addRoute($route['method'], $route['uri'], $route['handler']);
+            }
+        });
     }
 }
