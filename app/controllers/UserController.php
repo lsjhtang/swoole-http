@@ -5,6 +5,7 @@ use Core\annotations\Bean;
 use Core\annotations\RequestMapping;
 use Core\annotations\Value;
 use Core\http\Request;
+use Core\http\Response;
 
 
 /**
@@ -20,9 +21,9 @@ class UserController{
     /**
      * @RequestMapping(value="/test/{uid:\d+}",method={"GET"})
      */
-    public function test($uid, Request $request)
+    public function test( Request $request, $uid, Response $response)
     {
-        return 'test'.$uid .'+';
+        return ['name'=>'test','age'=>18];
     }
 
 }
