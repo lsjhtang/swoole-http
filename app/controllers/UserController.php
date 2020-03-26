@@ -23,6 +23,8 @@ class UserController{
      */
     public function test( Request $request, $uid, Response $response)
     {
+        var_dump($request);
+
         return ['name'=>'test','age'=>18];
     }
 
