@@ -12,6 +12,7 @@ class Response  {
     public function __construct(\Swoole\Http\Response $swooleRespose)
     {
         $this->swooleRespose = $swooleRespose;
+        $this->setHeader('Content-Type','text/plan;charset=utf8');
     }
 
     public static function init(\Swoole\Http\Response $respose)
@@ -35,15 +36,36 @@ class Response  {
         $this->body = $body;
     }
 
+    public function setHeader($key,$val)
+    {
+        $this->swooleRespose->header($key,$val);
+    }
+
+    public function writeHttpStatus($code)
+    {
+        $this->swooleRespose->status($code);
+    }
+    public function writeHtml($html)
+    {
+        $this->swooleRespose->write($html);
+    }
+
+    public function redirect($url,$code=301)
+    {
+        $this->writeHttpStatus($code);
+        $this->setHeader('Location ',$url);
+    }
+
     public function end()
     {
         $json_conver = ['array'];
         $body = $this->getBody();
         if (in_array(gettype($body), $json_conver)){
-            $this->swooleRespose->header('Content-type','application/json');
-            $this->setBody(json_encode($body));
+            $this->setHeader('Content-type','application/json');
+            $this->swooleRespose->write(json_encode($body));
+        }else{
+            $this->swooleRespose->write($body);
         }
-        $this->swooleRespose->write($this->getBody());
         $this->swooleRespose->end();
     }
 

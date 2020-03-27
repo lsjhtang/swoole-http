@@ -23,6 +23,8 @@ class UserController{
      */
     public function test( Request $request, $uid, Response $response)
     {
+        //$response->redirect("www.baidu.com");
+        $response->writeHtml('你好');
         return ['name'=>'test','age'=>18];
     }
 
