@@ -9,9 +9,9 @@ use Core\http\Response;
 
 
 /**
- * @Bean(name="user")
+ * @Bean(name="abc")
  */
-class UserController{
+class AbcController{
 
     /**
      * @Value(name="version")
@@ -19,13 +19,13 @@ class UserController{
     public $version = '1.0';
 
     /**
-     * @RequestMapping(value="/test/{uid:\d+}",method={"GET"})
+     * @RequestMapping(value="/abc")
      */
-    public function test( Request $request, $uid, Response $response)
+    public function abc( Request $request, $uid, Response $response)
     {
         //$response->redirect("www.baidu.com");
         //$response->writeHtml('你好');
-        return ['name'=>'test1','age'=>26];
+        return ['name'=>'abc','age'=>26];
     }
 
 }

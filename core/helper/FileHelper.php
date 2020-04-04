@@ -15,7 +15,7 @@ class FileHelper
             }
         }
 
-        return $ret;
+        return md5($ret);
     }
 
 }

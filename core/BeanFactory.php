@@ -45,10 +45,25 @@ class BeanFactory{
         return self::$container->get($name);
     }
 
+    public static function getAllBeanFiles($dir)//递归扫描文件
+    {
+        $ret = [];
+        $files = glob($dir.'/*');
+        foreach ($files as $file) {
+            if (is_dir($file) ) {
+               $ret = array_merge($ret, self::getAllBeanFiles($file));//递归读取所有文件夹下面的内容
+            } elseif(pathinfo($file)['extension'] == 'php') {
+                $ret[] = $file;
+            }
+        }
+
+        return $ret;
+    }
+    
     public static function ScanBeans($scan_dir, $scan_root_namespace)
     {
-        $files = glob($scan_dir.'/*.php');//读取文件夹下面所有.php文件
-        foreach ($files as $file) {
+        $all_files = self::getAllBeanFiles($scan_dir);//读取文件夹下面所有.php文件
+        foreach ($all_files as $file) {
             require_once ($file);
         }
 
