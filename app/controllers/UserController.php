@@ -25,7 +25,7 @@ class UserController{
     {
         //$response->redirect("www.baidu.com");
         //$response->writeHtml('你好');
-        return ['name'=>'test','age'=>18];
+        return ['name'=>'test','age'=>26];
     }
 
 }
