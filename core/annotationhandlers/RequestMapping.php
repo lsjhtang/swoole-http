@@ -1,6 +1,7 @@
 <?php
-namespace Core\annotations;
+namespace Core\annotationhandlers;
 
+use Core\annotations\RequestMapping;
 use Core\BeanFactory;
 
 return [

@@ -1,5 +1,8 @@
 <?php
-namespace Core\annotations;
+namespace Core\annotationhandlers;
+
+use Core\annotations\Value;
+use Core\annotations\Bean;
 
 return [
     Bean::class=>function($instance,$container,$self){
