@@ -1,6 +1,7 @@
 <?php
 namespace App\controller;
 
+use App\models\User;
 use Core\annotations\Bean;
 use Core\annotations\DB;
 use Core\annotations\RequestMapping;
@@ -38,7 +39,8 @@ class UserController{
     public function test1( Request $request, $uid, Response $response)
     {
         //$this->db1->setDbSource('default');
-        return $this->db1->table('test')->get();
+        return User::find(1);
+        //return $this->db1->table('test')->get();
     }
 
     /**
