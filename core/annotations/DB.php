@@ -8,5 +8,5 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 class DB{
 
-
+    public $source = 'default';
 }

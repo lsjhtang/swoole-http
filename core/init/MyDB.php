@@ -7,29 +7,48 @@ use Illuminate\Database\Capsule\Manager as lvDB;
 
 
 /**
- *
+ *  @Bean
  * @method  \Illuminate\Database\Query\Builder table(string $table, string|null  $as=null, string|null  $connection=null)
  */
-class MyDB
-{
+class MyDB{
+
     private $lvDB;
+    private $dbSource = 'default';
 
     public function __construct()
     {
-        global $GLOBALS_CONFIGS;
-        if (isset($GLOBALS_CONFIGS['db']) && isset($GLOBALS_CONFIGS['db']['default'])) {
-
-            $this->lvDB = new lvDB();
-            $this->lvDB->addConnection($GLOBALS_CONFIGS['db']['default']);
+        global $GLOBAL_CONFIGS;
+        //default 为默认数据源
+        if(isset($GLOBAL_CONFIGS['db'])){
+            $config_db = $GLOBAL_CONFIGS['db'];
+            $this->lvDB=new lvdb();
+            foreach ($config_db as $key => $value) {
+                $this->lvDB->addConnection($value, $key);
+            }
             $this->lvDB->setAsGlobal();
             $this->lvDB->bootEloquent();
         }
     }
-
-    public function __call($name, $arguments)
+    public function __call($methodName, $arguments)
     {
-       return  $this->lvDB::$name(...$arguments);
+        // $this->lvDB::table()
+        return $this->lvDB::Connection($this->dbSource)->$methodName(...$arguments);
     }
 
+    /**
+     * @return string
+     */
+    public function getDbSource(): string
+    {
+        return $this->dbSource;
+    }
+
+    /**
+     * @param string $dbSource
+     */
+    public function setDbSource(string $dbSource): void
+    {
+        $this->dbSource = $dbSource;
+    }
 
 }

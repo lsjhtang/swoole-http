@@ -16,10 +16,16 @@ use Core\init\MyDB;
 class UserController{
 
     /**
-     * @DB()
+     * @DB(source = "default")
      * @var MyDB
      */
-    public $db;
+    public $db1;
+
+    /**
+     * @DB(source = "db2")
+     * @var MyDB
+     */
+    private $db2;
 
     /**
      * @Value(name="version")
@@ -27,11 +33,21 @@ class UserController{
     public $version = '1.0';
 
     /**
-     * @RequestMapping(value="/test/{uid:\d+}",method={"GET"})
+     * @RequestMapping(value="/test1/{uid:\d+}",method={"GET"})
      */
-    public function test( Request $request, $uid, Response $response)
+    public function test1( Request $request, $uid, Response $response)
     {
-        return $this->db->table('test')->get();
+        //$this->db1->setDbSource('default');
+        return $this->db1->table('test')->get();
+    }
+
+    /**
+     * @RequestMapping(value="/test2/{uid:\d+}",method={"GET"})
+     */
+    public function test2( Request $request, $uid, Response $response)
+    {
+        //$this->db2->setDbSource('db2');
+        return $this->db2->table('test')->get();
     }
 
     /**

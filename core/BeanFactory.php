@@ -14,7 +14,7 @@ class BeanFactory{
     {
         self::$env=parse_ini_file(ROOT_PATH.'/env');
         $builder =  new ContainerBuilder();//初始化builder
-        $builder->useAnnotations(true);//启用注解
+        $builder->useAnnotations(true);//启用容器注解
         self::$container = $builder->build();//初始化容器
         $handlers = glob(ROOT_PATH.'/core/annotationhandlers/*.php');
         foreach ($handlers as $handler) {
@@ -34,15 +34,27 @@ class BeanFactory{
 
     }
 
+    //读取配置文件
     public static function getEnv(string $key, string $default='')//读取配置文件内容
     {
         if (isset(self::$env[$key])) return self::$env[$key];
         return $default;
     }
 
+    //从容器获取对象
     public static function getBean($name)
     {
-        return self::$container->get($name);
+        try {
+            return self::$container->get($name);
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
+    //把对象设置到容器里面 key=>value
+    public static function setBean($name,$value)
+    {
+        self::$container->set($name,$value);
     }
 
     public static function getAllBeanFiles($dir)//递归扫描文件
