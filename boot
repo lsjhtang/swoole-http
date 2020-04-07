@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__."/vendor/autoload.php";
 require_once __DIR__."/app/config/define.php"; //自定义配置
+\Swoole\Runtime::enableCoroutine(true);
 use Swoole\Process;
 use Core\server\HttpServer;
 

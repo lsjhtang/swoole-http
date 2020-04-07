@@ -58,9 +58,9 @@ class Response  {
 
     public function end()
     {
-        $json_conver = ['array'];
+        $json_convert=['array',"object"];
         $body = $this->getBody();
-        if (in_array(gettype($body), $json_conver)){
+        if (in_array(gettype($body), $json_convert)){
             $this->setHeader('Content-type','application/json');
             $this->swooleRespose->write(json_encode($body));
         }else{

@@ -39,8 +39,8 @@ class UserController{
     public function test1( Request $request, $uid, Response $response)
     {
         //$this->db1->setDbSource('default');
-        return User::find(1);
-        //return $this->db1->table('test')->get();
+        //return User::find(1);
+        return $this->db1->table('test')->first();
     }
 
     /**
@@ -49,7 +49,7 @@ class UserController{
     public function test2( Request $request, $uid, Response $response)
     {
         //$this->db2->setDbSource('db2');
-        return $this->db2->table('test')->get();
+        return $this->db1->select('select sleep(8)');
     }
 
     /**

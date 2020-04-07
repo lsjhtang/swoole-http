@@ -3,6 +3,7 @@
 namespace Core\init;
 
 use Core\annotations\Bean;
+use DI\Annotation\Inject;
 use Illuminate\Database\Capsule\Manager as lvDB;
 
 
@@ -15,24 +16,50 @@ class MyDB{
     private $lvDB;
     private $dbSource = 'default';
 
+    /**
+     * @Inject()
+     * @var PDOPool
+     */
+    public $pdopool;
+
     public function __construct()
     {
         global $GLOBAL_CONFIGS;
         //default 为默认数据源
         if(isset($GLOBAL_CONFIGS['db'])){
-            $config_db = $GLOBAL_CONFIGS['db'];
+            $configs=$GLOBAL_CONFIGS['db'];
             $this->lvDB=new lvdb();
-            foreach ($config_db as $key => $value) {
-                $this->lvDB->addConnection($value, $key);
+            foreach ($configs as $key=>$value)
+            {
+                //  $this->lvDB->addConnection($value,$key);
+                $this->lvDB->addConnection(["driver"=>"mysql"],$key);
             }
+
             $this->lvDB->setAsGlobal();
             $this->lvDB->bootEloquent();
         }
     }
     public function __call($methodName, $arguments)
     {
-        // $this->lvDB::table()
-        return $this->lvDB::Connection($this->dbSource)->$methodName(...$arguments);
+        $pdo_object=$this->pdopool->getConnection();
+        try{
+            if(!$pdo_object) {
+                return [];
+            }
+            $this->lvDB->getConnection($this->dbSource)->setPdo($pdo_object->db);//设置pdo对象
+            $ret=$this->lvDB::connection($this->dbSource)->$methodName(...$arguments);
+            return $ret;
+        }catch (\Exception $exception){
+            return null;
+        }
+
+        finally{
+            if($pdo_object){
+                $this->pdopool->close($pdo_object); //放回连接
+            }
+        }
+
+        //return $this->lvDB::Connection($this->dbSource)->$methodName(...$arguments);
     }
 
     /**
