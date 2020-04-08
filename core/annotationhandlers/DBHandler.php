@@ -15,9 +15,11 @@ return [
                 $mydb_bean = clone BeanFactory::getBean(MyDB::class);
                 $mydb_bean->setDbSource($self->source);//新MyDB对象设置数据源
                 BeanFactory::setBean($bean_name, $mydb_bean);//把新的对象塞进容器里面
+            } else {
+                $mydb_bean = clone $mydb_bean;
             }
         } else {
-            $mydb_bean = BeanFactory::getBean(MyDB::class);
+            $mydb_bean = clone BeanFactory::getBean(MyDB::class);
         }
 
         $property->setAccessible(true);

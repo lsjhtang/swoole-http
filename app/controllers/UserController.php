@@ -10,7 +10,6 @@ use Core\http\Request;
 use Core\http\Response;
 use Core\init\MyDB;
 
-
 /**
  * @Bean(name="user")
  */
@@ -40,7 +39,11 @@ class UserController{
     {
         //$this->db1->setDbSource('default');
         //return User::find(1);
-        return $this->db1->table('test')->first();
+        $this->db1->Begin();
+        $this->db1->table('test')->insert(['user_name'=>'zhangshan','age'=>1]);
+        $this->db1->Rollback();
+
+        return 1;
     }
 
     /**

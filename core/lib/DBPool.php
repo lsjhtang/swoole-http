@@ -41,8 +41,7 @@ abstract class DBPool{
             }else{
                 $getObject=$this->conns->pop(5);
             }
-        }
-        else{
+        } else {
             $getObject= $this->conns->pop();
         }
         if($getObject)

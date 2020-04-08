@@ -15,6 +15,7 @@ class MyDB{
 
     private $lvDB;
     private $dbSource = 'default';
+    private $transctionDB = false;
 
     /**
      * @Inject()
@@ -41,12 +42,22 @@ class MyDB{
     }
     public function __call($methodName, $arguments)
     {
-        $pdo_object=$this->pdopool->getConnection();
+        if ($this->transctionDB) {//事务对象
+            $pdo_object = $this->transctionDB;
+            $isTranstion = true;
+        }else{
+            $isTranstion = false;
+            $pdo_object = $this->pdopool->getConnection();
+        }
         try{
             if(!$pdo_object) {
                 return [];
             }
             $this->lvDB->getConnection($this->dbSource)->setPdo($pdo_object->db);//设置pdo对象
+            if ($isTranstion) {//开启事务
+                $aa = $this->lvDB->getConnection($this->dbSource)->beginTransaction();
+                var_dump($aa);
+            }
             $ret=$this->lvDB::connection($this->dbSource)->$methodName(...$arguments);
             return $ret;
         }catch (\Exception $exception){
@@ -54,7 +65,7 @@ class MyDB{
         }
 
         finally{
-            if($pdo_object){
+            if($pdo_object && ! $isTranstion){
                 $this->pdopool->close($pdo_object); //放回连接
             }
         }
@@ -76,6 +87,49 @@ class MyDB{
     public function setDbSource(string $dbSource): void
     {
         $this->dbSource = $dbSource;
+    }
+
+    /**
+     * 开启事务
+     */
+    public function Begin()
+    {
+        $this->transctionDB = $this->pdopool->getConnection();
+    }
+
+    /**
+     * 提交事务
+     */
+    public function Commit()
+    {
+        try{
+            $this->lvDB->getConnection($this->dbSource)->commit();
+        }
+        finally{
+            if ($this->transctionDB) {
+                $this->pdopool->close($this->transctionDB);
+                $this->transctionDB = false;
+            }
+        }
+    }
+
+
+    /**
+     * 事务回滚
+     */
+    public function RollBack()
+    {
+        try{
+            $this->lvDB->getConnection($this->dbSource)->rollBack();
+        }catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+        finally{
+            if ($this->transctionDB) {
+                $this->pdopool->close($this->transctionDB);
+                $this->transctionDB = false;
+            }
+        }
     }
 
 }
