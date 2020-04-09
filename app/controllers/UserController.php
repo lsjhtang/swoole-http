@@ -38,10 +38,10 @@ class UserController{
     public function test1( Request $request, $uid, Response $response)
     {
         //$this->db1->setDbSource('default');
-        //return User::find(1);
-        $this->db1->Begin();
-        $this->db1->table('test')->insert(['user_name'=>'zhangshan','age'=>1]);
-        $this->db1->Rollback();
+        return User::find(2);
+        $db = $this->db1->Begin();
+        $db->table('test')->insert(['user_name'=>'zhangshan','age'=>1]);
+        $db->Rollback();
 
         return 1;
     }

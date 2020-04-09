@@ -3,6 +3,7 @@
 namespace Core\init;
 
 use Core\annotations\Bean;
+use Core\BeanFactory;
 use DI\Annotation\Inject;
 use Illuminate\Database\Capsule\Manager as lvDB;
 
@@ -18,12 +19,11 @@ class MyDB{
     private $transctionDB = false;
 
     /**
-     * @Inject()
      * @var PDOPool
      */
     public $pdopool;
 
-    public function __construct()
+    public function __construct($db_obj = false)
     {
         global $GLOBAL_CONFIGS;
         //default 为默认数据源
@@ -39,7 +39,17 @@ class MyDB{
             $this->lvDB->setAsGlobal();
             $this->lvDB->bootEloquent();
         }
+
+        $this->transctionDB = $db_obj;
+        $this->pdopool = BeanFactory::getBean(PDOPool::class);
+
+        if ($db_obj) {
+            $this->lvDB->getConnection($this->dbSource)->setPdo($this->transctionDB->db);//设置pdo对象
+            $this->lvDB->getConnection($this->dbSource)->beginTransaction();
+        }
     }
+
+
     public function __call($methodName, $arguments)
     {
         if ($this->transctionDB) {//事务对象
@@ -53,10 +63,8 @@ class MyDB{
             if(!$pdo_object) {
                 return [];
             }
-            $this->lvDB->getConnection($this->dbSource)->setPdo($pdo_object->db);//设置pdo对象
-            if ($isTranstion) {//开启事务
-                $aa = $this->lvDB->getConnection($this->dbSource)->beginTransaction();
-                var_dump($aa);
+            if (!$isTranstion) {
+                $this->lvDB->getConnection($this->dbSource)->setPdo($pdo_object->db);//设置pdo对象
             }
             $ret=$this->lvDB::connection($this->dbSource)->$methodName(...$arguments);
             return $ret;
@@ -94,7 +102,8 @@ class MyDB{
      */
     public function Begin()
     {
-        $this->transctionDB = $this->pdopool->getConnection();
+        return new self($this->pdopool->getConnection());
+        //$this->transctionDB = $this->pdopool->getConnection();
     }
 
     /**
@@ -130,6 +139,31 @@ class MyDB{
                 $this->transctionDB = false;
             }
         }
+    }
+
+    public function releaseConnection($pdo_object)
+    {
+        if($pdo_object && ! $this->transctionDB){
+            $this->pdopool->close($pdo_object); //放回连接
+        }
+    }
+
+    public function genConnection()
+    {
+        if ($this->transctionDB) {//事务对象
+            $pdo_object = $this->transctionDB;
+            $isTranstion = true;
+        }else{
+            $isTranstion = false;
+            $pdo_object = $this->pdopool->getConnection();
+        }
+
+
+        if($pdo_object && ! $isTranstion){//不在事务才设置pdo对象
+            $this->lvDB->getConnection($this->dbSource)->setPdo($pdo_object->db);
+            return $pdo_object;
+        }
+        return false;
     }
 
 }

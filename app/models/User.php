@@ -2,9 +2,9 @@
 
 namespace App\models;
 
-use Core\lib\Model;
+use Core\lib\Models;
 
-class User extends Model
+class User extends Models
 {
     protected $table = 'test';
     protected $primaryKey = 'id';
