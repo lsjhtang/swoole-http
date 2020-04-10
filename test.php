@@ -39,7 +39,7 @@ $lvdb::connection("default")->beginTransaction();
 $lvdb::connection("default")->table("test")->where('id',2)->update(
     ["user_name"=>"11111111111","age"=>1]
 );
-$lvdb::connection('default')->rollBack();  //或者commit
+$lvdb::connection('default')->commit();  //或者commit
 
 
 

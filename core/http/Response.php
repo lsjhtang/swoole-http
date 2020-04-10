@@ -64,7 +64,9 @@ class Response  {
             $this->setHeader('Content-type','application/json');
             $this->swooleRespose->write(json_encode($body));
         }else{
-            $this->swooleRespose->write($body);
+            if ($body) {
+                $this->swooleRespose->write($body);
+            }
         }
         $this->swooleRespose->end();
     }

@@ -38,21 +38,30 @@ class UserController{
     public function test1( Request $request, $uid, Response $response)
     {
         //$this->db1->setDbSource('default');
-        return User::find(2);
-        $db = $this->db1->Begin();
-        $db->table('test')->insert(['user_name'=>'zhangshan','age'=>1]);
-        $db->Rollback();
+        $users =  User::where('id',1)->update(['user_name'=>'aa','age'=>11]);
+        /*$users->user_name = 1;
+        $users->age = 10;
+        $users->save();*/
 
-        return 1;
+        /*$db = $this->db1->Begin();
+        $db->table('test')->insert(['user_name'=>'zhangshan','age'=>1]);
+        $db->Rollback();*/
+
+        return $users;
     }
 
     /**
      * @RequestMapping(value="/test2/{uid:\d+}",method={"GET"})
      */
-    public function test2( Request $request, $uid, Response $response)
+    public function test2( Request $request, Response $response)
     {
+        $users = new User();
+        $users->user_name = 1;
+        $users->age = 10;
+        $users->save();
+        return 2;
         //$this->db2->setDbSource('db2');
-        return $this->db1->select('select sleep(8)');
+        //return $this->db1->select('select sleep(8)');
     }
 
     /**

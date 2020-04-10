@@ -9,4 +9,5 @@ class User extends Models
     protected $table = 'test';
     protected $primaryKey = 'id';
     protected $connection = 'default';
+    public $timestamps = false;
 }

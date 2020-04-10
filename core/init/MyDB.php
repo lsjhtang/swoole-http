@@ -4,7 +4,6 @@ namespace Core\init;
 
 use Core\annotations\Bean;
 use Core\BeanFactory;
-use DI\Annotation\Inject;
 use Illuminate\Database\Capsule\Manager as lvDB;
 
 
