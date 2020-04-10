@@ -38,16 +38,16 @@ class UserController{
     public function test1( Request $request, $uid, Response $response)
     {
         //$this->db1->setDbSource('default');
-        $users =  User::where('id',1)->update(['user_name'=>'aa','age'=>11]);
+        $users =  User::where('id',82)->update(['user_name'=>'aa','age'=>11]);
         /*$users->user_name = 1;
         $users->age = 10;
         $users->save();*/
 
-        /*$db = $this->db1->Begin();
-        $db->table('test')->insert(['user_name'=>'zhangshan','age'=>1]);
-        $db->Rollback();*/
+        //$db = $this->db1->Begin();
+        //$this->db1->table('test')->insert(['user_name'=>'zhangshan','age'=>1]);
+        //$db->Commit();
 
-        return $users;
+        return 1;
     }
 
     /**

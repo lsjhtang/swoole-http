@@ -33,16 +33,18 @@ class Models extends Model
     public function invoke(callable $func)
     {
         $mydb = clone BeanFactory::getBean(MyDB::class);
-        $obj = $mydb->genConnection();
+        $obj = $mydb->model($func);
+        /*$obj = $mydb->genConnection();*/
         try{
-            return $func();
+            return $obj();
+            /*return $func();*/
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
 
-        finally{
+        /*finally{
             $mydb->releaseConnection($obj);
-        }
+        }*/
 
     }
 

@@ -51,25 +51,24 @@ class MyDB{
 
     public function __call($methodName, $arguments)
     {
-        if ($this->transctionDB) {//事务对象
-            $pdo_object = $this->transctionDB;
-            $isTranstion = true;
-        }else{
-            $isTranstion = false;
-            $pdo_object = $this->pdopool->getConnection();
-        }
         try{
-            if(!$pdo_object) {
-                return [];
-            }
-            if (!$isTranstion) {
+            if ($this->transctionDB) {//事务对象
+                $pdo_object = $this->transctionDB;
+                $isTranstion = true;
+            }else{
+                $isTranstion = false;
+                $pdo_object = $this->pdopool->getConnection();
                 $this->lvDB->getConnection($this->dbSource)->setPdo($pdo_object->db);//设置pdo对象
+            }
+            if ($methodName == 'model') {
+               return $arguments[0];
             }
             $ret=$this->lvDB::connection($this->dbSource)->$methodName(...$arguments);
             return $ret;
         }catch (\Exception $exception){
             return null;
         }
+
 
         finally{
             if($pdo_object && ! $isTranstion){
@@ -140,14 +139,14 @@ class MyDB{
         }
     }
 
-    public function releaseConnection($pdo_object)
+    /*public function releaseConnection($pdo_object)
     {
         if($pdo_object && ! $this->transctionDB){
             $this->pdopool->close($pdo_object); //放回连接
         }
-    }
+    }*/
 
-    public function genConnection()
+   /* public function genConnection()
     {
         if ($this->transctionDB) {//事务对象
             $pdo_object = $this->transctionDB;
@@ -163,6 +162,6 @@ class MyDB{
             return $pdo_object;
         }
         return false;
-    }
+    }*/
 
 }
