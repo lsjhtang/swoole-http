@@ -3,6 +3,7 @@ namespace Core\annotationhandlers;
 
 use Core\annotations\RequestMapping;
 use Core\BeanFactory;
+use Core\init\DecoratorCollector;
 
 return [
     RequestMapping::class=>function(\ReflectionMethod $method,$instance,$self){
@@ -28,8 +29,8 @@ return [
                 }
                 end:
             }
-
-            return  $method->invokeArgs($instance, $inputParams);//执行反射方法
+            return $d_collector=BeanFactory::getBean(DecoratorCollector::class)->exec($method,$instance,$inputParams);
+            //return  $method->invokeArgs($instance, $inputParams);//执行反射方法
         });
         return $instance;
     },

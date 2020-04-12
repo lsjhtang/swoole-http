@@ -4,6 +4,7 @@ namespace App\controller;
 use App\models\User;
 use Core\annotations\Bean;
 use Core\annotations\DB;
+use Core\annotations\Redis;
 use Core\annotations\RequestMapping;
 use Core\annotations\Value;
 use Core\http\Request;
@@ -33,12 +34,14 @@ class UserController{
     public $version = '1.0';
 
     /**
+     * @Redis()
      * @RequestMapping(value="/test1/{uid:\d+}",method={"GET"})
      */
-    public function test1( Request $request, $uid, Response $response)
+    public function test1( )
     {
         //$this->db1->setDbSource('default');
-        $users =  User::where('id',82)->update(['user_name'=>'aa','age'=>11]);
+        //$users =  User::all();
+        $users = $this->db1->table('test')->get();
         /*$users->user_name = 1;
         $users->age = 10;
         $users->save();*/
@@ -47,7 +50,7 @@ class UserController{
         //$this->db1->table('test')->insert(['user_name'=>'zhangshan','age'=>1]);
         //$db->Commit();
 
-        return 1;
+        return $users;
     }
 
     /**
