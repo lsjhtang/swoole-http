@@ -34,14 +34,14 @@ class UserController{
     public $version = '1.0';
 
     /**
-     * @Redis()
+     * @Redis(key = "test")
      * @RequestMapping(value="/test1/{uid:\d+}",method={"GET"})
      */
-    public function test1( )
+    public function test1( Request $request, $id, Response $response )
     {
         //$this->db1->setDbSource('default');
         //$users =  User::all();
-        $users = $this->db1->table('test')->get();
+        $users = $this->db2->table('test')->get();
         /*$users->user_name = 1;
         $users->age = 10;
         $users->save();*/

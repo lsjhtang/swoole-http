@@ -29,7 +29,7 @@ return [
                 }
                 end:
             }
-            return $d_collector=BeanFactory::getBean(DecoratorCollector::class)->exec($method,$instance,$inputParams);
+            return BeanFactory::getBean(DecoratorCollector::class)->exec($method,$instance,$inputParams);
             //return  $method->invokeArgs($instance, $inputParams);//执行反射方法
         });
         return $instance;

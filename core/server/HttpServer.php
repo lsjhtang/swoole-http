@@ -71,8 +71,11 @@ class HttpServer{
     }
 
     public function run(){
-        $p = new TestProcess();
-        $this->server->addProcess($p->run());//监控
+        $developer = parse_ini_file(ROOT_PATH.'/.env');
+        if ($developer['developer']) {
+            $p = new TestProcess();
+            $this->server->addProcess($p->run());//监控 开发者模式
+        }
 
         $this->server->start();
     }

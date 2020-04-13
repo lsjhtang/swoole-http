@@ -7,7 +7,8 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"METHOD"})
  */
 class Redis{
-    public $source="default";
-    public $key="";
-    public $type="string";
+    public $source  = 'default';
+    public $key     = '';
+    public $type    = 'string';
+    public $prefix  = '';
 }

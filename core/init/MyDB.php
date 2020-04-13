@@ -101,7 +101,6 @@ class MyDB{
     public function Begin()
     {
         return new self($this->pdopool->getConnection());
-        //$this->transctionDB = $this->pdopool->getConnection();
     }
 
     /**
@@ -139,29 +138,5 @@ class MyDB{
         }
     }
 
-    /*public function releaseConnection($pdo_object)
-    {
-        if($pdo_object && ! $this->transctionDB){
-            $this->pdopool->close($pdo_object); //放回连接
-        }
-    }*/
-
-   /* public function genConnection()
-    {
-        if ($this->transctionDB) {//事务对象
-            $pdo_object = $this->transctionDB;
-            $isTranstion = true;
-        }else{
-            $isTranstion = false;
-            $pdo_object = $this->pdopool->getConnection();
-        }
-
-
-        if($pdo_object && ! $isTranstion){//不在事务才设置pdo对象
-            $this->lvDB->getConnection($this->dbSource)->setPdo($pdo_object->db);
-            return $pdo_object;
-        }
-        return false;
-    }*/
 
 }

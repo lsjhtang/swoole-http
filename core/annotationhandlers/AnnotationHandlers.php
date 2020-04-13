@@ -21,7 +21,7 @@ return [
 
     //属性注解
     Value::class=>function(\ReflectionProperty $property, $instance, $self){
-        $env = parse_ini_file(ROOT_PATH.'/env');
+        $env = parse_ini_file(ROOT_PATH.'/.env');
         if (!isset($env[$self->name]) || empty($self->name)) return $instance;
         $property->setValue($instance,$env[$self->name]);
         return $instance;

@@ -12,7 +12,7 @@ class BeanFactory{
 
     public static function init()
     {
-        self::$env=parse_ini_file(ROOT_PATH.'/env');
+        self::$env=parse_ini_file(ROOT_PATH.'/.env');
         $builder =  new ContainerBuilder();//初始化builder
         $builder->useAnnotations(true);//启用容器注解
         self::$container = $builder->build();//初始化容器
@@ -90,13 +90,13 @@ class BeanFactory{
                 foreach ($class_annos as $class_anno) {
                     if(!isset(self::$handler[get_class($class_anno)])) continue;//如果没有做注解处理函数不作处理
                     $handler = self::$handler[get_class($class_anno)];//获取处理过程
-                    $instance =  self::$container->get($ref_class->getName());
+                    $instance = self::$container->get($ref_class->getName());
                     //处理属性注解
                     self::handlerProAnno($instance, $ref_class, $reader);
                     //处理方法注解
                     self::handlerMethodAnno($instance, $ref_class, $reader);
 
-                   $handler($instance,self::$container,$class_anno);//执行处理过程,usercontroller类的全名称
+                   $handler($instance,self::$container,$class_anno);//执行处理过程
 
                 }
             }

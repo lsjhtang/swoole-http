@@ -6,6 +6,7 @@ use Core\init\PHPRedisPool;
 /**
  * Class RedisHelper
  * @method  static string get(string $key)
+ * @method  static string set(string $key, string $value)
  */
 class RedisHelper{
 
