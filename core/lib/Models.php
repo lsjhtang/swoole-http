@@ -30,21 +30,34 @@ class Models extends Model
 
     }
 
+    public static function all($columns = ['*'])
+    {
+        return self::invokeStatic(function () use ($columns){
+            return parent::all($columns);
+        });
+    }
+
     public function invoke(callable $func)
     {
         $mydb = clone BeanFactory::getBean(MyDB::class);
         $obj = $mydb->model($func);
-        /*$obj = $mydb->genConnection();*/
         try{
             return $obj();
-            /*return $func();*/
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
+        
+    }
 
-        /*finally{
-            $mydb->releaseConnection($obj);
-        }*/
+    public static function invokeStatic(callable $func)
+    {
+        $mydb = clone BeanFactory::getBean(MyDB::class);
+        $obj = $mydb->model($func);
+        try{
+            return $obj();
+        }catch (\Exception $exception){
+            return $exception->getMessage();
+        }
 
     }
 

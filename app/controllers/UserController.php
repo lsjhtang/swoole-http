@@ -34,14 +34,14 @@ class UserController{
     public $version = '1.0';
 
     /**
-     * @Redis(key = "#1", prefix="test")
+     * @Redis(key = "#820", prefix="test", expire="30" ,type="hash", incr="abc")
      * @RequestMapping(value="/test1/{uid:\d+}",method={"GET"})
      */
-    public function test1( Request $request, $uid, Response $response )
+    public function test1( Request $request, Response $response )
     {
         //$this->db1->setDbSource('default');
-        //$users =  User::all();
-        $users = $this->db2->table('test')->get();
+        $users =  User::all();
+        //$users = $this->db2->table('test')->first();
         /*$users->user_name = 1;
         $users->age = 10;
         $users->save();*/
@@ -54,17 +54,20 @@ class UserController{
     }
 
     /**
+     * @Redis(prefix="hproduct",key="#prod_id",type="hash")
      * @RequestMapping(value="/test2/{uid:\d+}",method={"GET"})
      */
     public function test2( Request $request, Response $response)
     {
-        $users = new User();
+        /*$users = new User();
         $users->user_name = 1;
         $users->age = 10;
         $users->save();
-        return 2;
+        return 2;*/
         //$this->db2->setDbSource('db2');
         //return $this->db1->select('select sleep(8)');
+        $users = $this->db2->table('test')->get();
+        return $users;
     }
 
     /**
