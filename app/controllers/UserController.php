@@ -34,10 +34,10 @@ class UserController{
     public $version = '1.0';
 
     /**
-     * @Redis(key = "test")
+     * @Redis(key = "#1", prefix="test")
      * @RequestMapping(value="/test1/{uid:\d+}",method={"GET"})
      */
-    public function test1( Request $request, $id, Response $response )
+    public function test1( Request $request, $uid, Response $response )
     {
         //$this->db1->setDbSource('default');
         //$users =  User::all();

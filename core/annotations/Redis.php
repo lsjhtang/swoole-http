@@ -11,4 +11,5 @@ class Redis{
     public $key     = '';
     public $type    = 'string';
     public $prefix  = '';
+    public $expire  = -1;
 }

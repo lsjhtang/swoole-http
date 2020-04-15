@@ -6,6 +6,29 @@ use Core\BeanFactory;
 use Core\init\DecoratorCollector;
 use Core\lib\RedisHelper;
 
+function getKey($key,$params){
+    $pattern = "/^#(\d+)/i";
+    if (preg_match($pattern, $key, $matches)) {
+        return $params[$matches[1]];
+    }
+    return $key;
+}
+
+function RedisByString(Redis $self,array $params,$func){
+    $_key=$self->prefix.getKey($self->key,$params); //缓存key
+    $getFromRedis=RedisHelper::get($_key);
+    if($getFromRedis){ //缓存如果有，直接返回
+        return $getFromRedis;
+    }else{ //缓存没有，则直接执行原控制器方法，并返回
+        $getData=call_user_func($func,...$params);
+        if($self->expire>0){//过期时间
+            RedisHelper::setex($_key,$self->expire,json_encode($getData));
+        } else {
+            RedisHelper::set($_key,json_encode($getData));
+        }
+        return $getData;
+    }
+}
 
 return [
     Redis::class=>function(\ReflectionMethod $method,$instance,$self){
@@ -13,20 +36,17 @@ return [
         $key=get_class($instance)."::".$method->getName();
         $d_collector->dSet[$key]=function($func) use($self) { //收集装饰器 放入 装饰器收集类
             return function($params) use($func,$self){
+
                 /** @var $self Redis */
-                if ($self->key != '') {
-                    $keys = $self->key;
-                    $get_from_redis = RedisHelper::get($keys);
-                    if ($get_from_redis) {
-                        return $get_from_redis;
-                    } else {
-                        $get_date = call_user_func($func, ...$params);
-                        RedisHelper::set($keys, json_encode($get_date));
-                        return $get_date;
+                if($self->key!=""){ //处理缓存
+                    switch($self->type){
+                        case "string":
+                            return RedisByString($self,$params,$func);
+                        default:
+                            return call_user_func($func,...$params);
                     }
                 }
-
-                return call_user_func($func, ...$params);
+                return call_user_func($func,...$params);
             };
         };
         return $instance;
