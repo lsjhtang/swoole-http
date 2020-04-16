@@ -64,6 +64,28 @@ function RedisByHash(Redis $self,array $params,$func){//处理hash类型的数�
     }
 }
 
+function RedisByScrtedSet(Redis $self,array $params,$func){//处理有序集合类型的数据
+    if ($self->coroutine) {
+        $chan = call_user_func($func,...$params);
+        $getData = [];
+        for ($i=0;$i<$chan->capacity;$i++) {
+            $re = $chan->pop(5);
+            $getData = array_merge($getData, $re);
+        }
+    }else{
+        $getData=call_user_func($func,...$params);
+    }
+    if (is_array($getData) || is_object($getData)) {
+        if(is_object($getData)){//如果是对象，转换成数组
+            $getData=json_decode(json_encode($getData),1);
+        }
+        foreach($getData as  $data){
+            RedisHelper::zAdd($self->prefix, $data[$self->score],$self->member.$data[$self->key]);
+        }
+    }
+    return $getData;
+}
+
 
 
 return [
@@ -80,6 +102,8 @@ return [
                             return RedisByString($self,$params,$func);
                         case "hash":
                             return RedisByHash($self,$params,$func);
+                        case "sortedset":
+                            return RedisByScrtedSet($self,$params,$func);
                         default:
                             return call_user_func($func,...$params);
                     }

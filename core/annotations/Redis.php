@@ -13,4 +13,7 @@ class Redis{
     public $prefix  = '';
     public $expire  = -1;
     public $incr    = '';
+    public $member  = '';
+    public $score   = '';//有序集合分数
+    public $coroutine   = false;//使用协程
 }

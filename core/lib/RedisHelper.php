@@ -10,6 +10,7 @@ use Core\init\PHPRedisPool;
  * @method  static bool setex(string $key,int $ttl,string $value)
  * @method  static array hgetall(string $key)
  * @method  static bool hmset(string $key,array $keyandvalues)
+ * @method  static bool zAdd(string $key, int $score, string $member)
  */
 class RedisHelper{
 
@@ -23,7 +24,6 @@ class RedisHelper{
             if(!$redis_obj) {
                 return false;
             }
-
             return $redis_obj->redis->$name(...$arguments);
         }catch (\Exception $exception){
             return $exception->getMessage();
