@@ -16,4 +16,5 @@ class Redis{
     public $member  = '';
     public $score   = '';//有序集合分数
     public $coroutine   = false;//使用协程
+    public $script  = '';//lua脚本
 }

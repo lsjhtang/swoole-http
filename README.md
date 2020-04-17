@@ -1,6 +1,6 @@
 ## Buddha 框架
 
-#### Ioc,Di,注解,框架已经实现;开发者模式支持代码热更新;
+#### Ioc,Di,注解,连接池,框架已经实现;开发者模式支持代码热更新;
 
 #### Start
 
@@ -42,8 +42,9 @@ User::find(1);
 $db = $this->db1->Begin();
 $this->db1->table('test')->insert(['user_name'=>'zhangshan','age'=>1]);
 $db->Commit();
-
+```
 - 模型事务
+```PHP
 $db = $this->db1->Begin();
 $users = new User();
 $users->user_name = 1;
@@ -56,15 +57,25 @@ $test->save();
 $db->Commit();
 ```
 #### Redis
-- 给执行结果添加redis缓存
+- redis注解 支持string hash set等类型
 ```PHP
 /**
  * @Redis(key="name")
  */
 public function user( Request $request, $uid, Response $response)
 {
-    $this->db->table('test')->get();
+   return $this->db->table('test')->get();
 }
 ```
-
+- redis锁 lua脚本
+```PHP
+/**
+ * @Lock(prefix="lock",key="#0")
+ * @RequestMapping(value="/lock/{uid:\d+}")
+ */
+public function lock( Request $request, $uid, Response $response)
+{
+   return $this->db->table('test')->get();
+}
+```
 #### 更多内容正在研究中......

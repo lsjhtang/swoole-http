@@ -86,7 +86,9 @@ function RedisByScrtedSet(Redis $self,array $params,$func){//处理有序集合�
     return $getData;
 }
 
-
+function RedisByLua($self,$params,$func){//lua脚本
+    return RedisHelper::eval($self->script);
+}
 
 return [
     Redis::class=>function(\ReflectionMethod $method,$instance,$self){
@@ -94,8 +96,11 @@ return [
         $key=get_class($instance)."::".$method->getName();
         $d_collector->dSet[$key]=function($func) use($self) { //收集装饰器 放入 装饰器收集类
             return function($params) use($func,$self){
-
                 /** @var $self Redis */
+
+                if ($self->script != '') {
+                    return RedisByLua($self,$params,$func);
+                }
                 if($self->key!=""){ //处理缓存
                     switch($self->type){
                         case "string":

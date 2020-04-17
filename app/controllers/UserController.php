@@ -4,12 +4,14 @@ namespace App\controller;
 use App\models\User;
 use Core\annotations\Bean;
 use Core\annotations\DB;
+use Core\annotations\Lock;
 use Core\annotations\Redis;
 use Core\annotations\RequestMapping;
 use Core\annotations\Value;
 use Core\http\Request;
 use Core\http\Response;
 use Core\init\MyDB;
+use Core\lib\RedisHelper;
 use Swoole\Coroutine;
 
 /**
@@ -73,11 +75,29 @@ class UserController{
     }
 
     /**
+     * @Redis(script="
+        return redis.call('ZRANGE','stock','0','-1','withscores')
+        ")
      * @RequestMapping(value="/user")
      */
     public function user()
     {
-        return ['name'=>'user','age'=>26];
+        //return ['name'=>'user','age'=>26];
+    }
+
+    /**
+     * @Lock(prefix="lock",key="#0")
+     * @RequestMapping(value="/lock/{uid:\d+}")
+     */
+    public function lock($uid)
+    {
+        $key = 'stock';
+        $member = 'pid'.$uid;
+        $prodStock = RedisHelper::zScore($key,$member);
+        if ($prodStock && $prodStock > 0) {
+            return RedisHelper::zIncrBy($key,-1,$member);
+        }
+        return '卖完了';
     }
 
 }

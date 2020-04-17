@@ -2,6 +2,7 @@
 namespace Core\lib;
 use Core\BeanFactory;
 use Core\init\PHPRedisPool;
+use phpDocumentor\Reflection\Types\Array_;
 
 /**
  * Class RedisHelper
@@ -11,6 +12,7 @@ use Core\init\PHPRedisPool;
  * @method  static array hgetall(string $key)
  * @method  static bool hmset(string $key,array $keyandvalues)
  * @method  static bool zAdd(string $key, int $score, string $member)
+ * @method  static mixed eval($script, $args=array(),$numberKeys=0)
  */
 class RedisHelper{
 
