@@ -27,7 +27,7 @@ LUA;
     return RedisHelper::eval($script,[$self->prefix.getKey($self->key,$params)],1);
 }
 
-function lock($self,$params) {//争抢所
+function lock($self,$params) {//争抢锁
     $retry = $self->retry;
     while ($retry-- > 0) {
         $get_lock = getLock($self,$params);
