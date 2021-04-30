@@ -3,7 +3,7 @@
 return [
     'default' => [
         'driver'    => 'mysql',
-        'host'      => '172.20.10.13',
+        'host'      => '127.0.0.1',
         'database'  => 'swoole',
         'username'  => 'root',
         'password'  => 'root',
@@ -13,7 +13,7 @@ return [
     ],
     'db2' => [
         'driver'    => 'mysql',
-        'host'      => '172.20.10.13',
+        'host'      => '127.0.0.1',
         'database'  => 'test',
         'username'  => 'root',
         'password'  => 'root',
