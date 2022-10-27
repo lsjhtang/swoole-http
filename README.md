@@ -5,6 +5,9 @@
 #### 版本要求
 - PHP版本>=7.1, swoole版本>=4.3x
 
+#### 前提条件
+- 需要修改app/configl里面的配置文件, 否则会连不上mysql跟redis
+
 #### 快速开始
 
 - Http Server start
